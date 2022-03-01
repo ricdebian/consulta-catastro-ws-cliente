@@ -1,0 +1,324 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>es.ine.sgtic</groupId>
+	<artifactId>consulta-catastro-ws-cliente</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<build>
+		<finalName>consulta-catastro-ws-cliente</finalName>
+		<resources>
+			<resource>
+				<filtering>false</filtering>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>*.properties</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<filtering>true</filtering>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>*.properties</include>
+				</includes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<!-- Plugin para generar clases del cliente ws, a partir del wsdl -->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>2.5</version>
+				<executions>
+					<execution>
+						<id>generate-wsclient</id>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<target>2.1</target>
+				<!-- 	<wsdlUrls>-->
+				<!--	  <wsdlUrl>https://${servidor.ws}:${puerto.ws}/ServiciosWCF/OVCWcfConsulta/wsdl/OVCConsulta.wsdl</wsdlUrl> -->
+						<!-- <wsdlUrl>http://desa10.ine.es:8080/consultaMDG-ws/endpoints/ConsultaMDG.wsdl</wsdlUrl> -->
+						<!-- <wsdlUrl>http://localhost:8080/consultaMDG-ws/endpoints/ConsultaMDG.wsdl</wsdlUrl> -->
+				<!--	</wsdlUrls>-->
+					<wsdlFiles>
+                   		 <wsdlFile>${basedir}/src/main/resources/wsdl/OVCConsulta.wsdl</wsdlFile>
+                	</wsdlFiles>
+					<sourceDestDir>${basedir}/src/main/java</sourceDestDir>
+					<verbose>true</verbose>
+				</configuration>
+			</plugin>
+			<!-- <plugin> <groupId>org.jvnet.jax-ws-commons</groupId> <artifactId>jaxws-maven-plugin</artifactId> 
+				<version>2.3</version> <executions> <execution> <goals> <goal>wsimport</goal> 
+				</goals> </execution> </executions> <configuration> <target>2.1</target> 
+				<wsdlUrls> <wsdlUrl>http://localhost:8080/prototipo-ws/endpoints/GetUsuario.wsdl</wsdlUrl> 
+				</wsdlUrls> <sourceDestDir>${basedir}/src/main/java</sourceDestDir> Parametros 
+				necesarios para poder usar jaxws-maven-plugin 2.3 con Java8 Mantener hasta 
+				que saquen la version 2.3.1 <vmArgs> <vmArg>-Djavax.xml.accessExternalDTD=all</vmArg> 
+				<vmArg>-Djavax.xml.accessExternalSchema=all</vmArg> </vmArgs> </configuration> 
+				</plugin> -->
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<!-- Para que por defeto se tilice java 8 -->
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<!-- copia dependencias a lib -->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-dependency-plugin</artifactId> 
+				<executions> <execution> <id>copy-dependencies</id> <phase>prepare-package</phase> 
+				<goals> <goal>copy-dependencies</goal> </goals> <configuration> <outputDirectory>${project.build.directory}/lib</outputDirectory> 
+				<overWriteReleases>false</overWriteReleases> <overWriteSnapshots>false</overWriteSnapshots> 
+				<overWriteIfNewer>true</overWriteIfNewer> </configuration> </execution> </executions> 
+				</plugin> Genera un jar pero sin empaquetar las dependencias <plugin> <groupId>org.apache.maven.plugins</groupId> 
+				<artifactId>maven-jar-plugin</artifactId> <configuration> <archive> <manifest> 
+				<addClasspath>true</addClasspath> <classpathPrefix>lib/</classpathPrefix> 
+				<mainClass>es.ine.sgtic.webservices.consultamdgws.lanzador.ClienteMain</mainClass> 
+				</manifest> </archive> </configuration> </plugin> -->
+			<!-- Empaqueta las dependencias en el jar -->
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>  <!-- Clase principal -->
+							<mainClass>es.meh.catastro.lanzador.ClienteMain</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.build.directory}/generated</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<properties>
+
+
+		<spring.version>5.0.10.RELEASE</spring.version>
+		<spring.ws.version>3.0.7.RELEASE</spring.ws.version>
+		<log4j.version>1.2.17</log4j.version>
+		<context.path>consulta-catastro-ws-cliente</context.path>
+
+		<log4j.path>/opt/consulta-catastro-cliente/log</log4j.path>
+		<log4j.nombre.fichero-web>consulta-catastro-ws-cliente.log</log4j.nombre.fichero-web>
+		<log4j.MaxFileSize>59999KB</log4j.MaxFileSize>
+		<log4j.MaxBackupIndex>9</log4j.MaxBackupIndex>
+		<log4j.appender>CONSOLA,FICHERO</log4j.appender>
+
+	</properties>
+	<profiles>
+		<profile>
+			<id>desa</id>
+			<properties>
+
+				<!-- Log de Aplicacion -->
+				<!-- <log4j.path>/opt/consultaMDG-cliente/log</log4j.path> <log4j.nombre.fichero-web>consultaMDG-cliente.log</log4j.nombre.fichero-web> 
+					<log4j.MaxFileSize>59999KB</log4j.MaxFileSize> <log4j.MaxBackupIndex>9</log4j.MaxBackupIndex> 
+					<log4j.appender>CONSOLA,FICHERO</log4j.appender> -->
+				<log4j.nivel_traza.general>DEBUG</log4j.nivel_traza.general>
+				<log4j.nivel_traza.spring>DEBUG</log4j.nivel_traza.spring>
+				<log4j.nivel_traza.spring.ws.client>TRACE</log4j.nivel_traza.spring.ws.client>
+				<log4j.nivel_traza.hibernate>INFO</log4j.nivel_traza.hibernate>
+				<log4j.nivel_traza.faces>INFO</log4j.nivel_traza.faces>
+				<log4j.nivel_traza.apache_commons>ERROR</log4j.nivel_traza.apache_commons>
+				<log4j.nivel_traza.apache_http_wire>ERROR</log4j.nivel_traza.apache_http_wire>
+				<log4j.nivel_traza.com.ocpsoft.shade.org.apache.commons.digester>ERROR</log4j.nivel_traza.com.ocpsoft.shade.org.apache.commons.digester>
+				<servidor.ws>serwebi.sedecatastro.gob.es</servidor.ws>
+				<puerto.ws>443</puerto.ws>
+
+			</properties>
+		</profile>
+
+		<profile>
+			<id>prod</id>
+			<properties>
+
+				<!-- Log de Aplicacion -->
+				<!-- <log4j.path>/opt/consultaMDG/log</log4j.path> <log4j.nombre.fichero-web>consultaMDG-cliente.log</log4j.nombre.fichero-web> 
+					<log4j.MaxFileSize>59999KB</log4j.MaxFileSize> <log4j.MaxBackupIndex>9</log4j.MaxBackupIndex> 
+					<log4j.appender>CONSOLA,FICHERO</log4j.appender> -->
+				<log4j.nivel_traza.general>ERROR</log4j.nivel_traza.general>
+				<log4j.nivel_traza.spring>ERROR</log4j.nivel_traza.spring>
+				<log4j.nivel_traza.spring.ws.client>ERROR</log4j.nivel_traza.spring.ws.client>
+				<log4j.nivel_traza.hibernate>ERROR</log4j.nivel_traza.hibernate>
+				<log4j.nivel_traza.faces>ERROR</log4j.nivel_traza.faces>
+				<log4j.nivel_traza.apache_commons>ERROR</log4j.nivel_traza.apache_commons>
+				<log4j.nivel_traza.apache_http_wire>ERROR</log4j.nivel_traza.apache_http_wire>
+				<log4j.nivel_traza.com.ocpsoft.shade.org.apache.commons.digester>ERROR</log4j.nivel_traza.com.ocpsoft.shade.org.apache.commons.digester>
+
+				<servidor.ws>serwebr.sedecatastro.gob.es</servidor.ws>
+				<puerto.ws>443</puerto.ws>
+			</properties>
+		</profile>
+	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.1.2</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>1.1.2</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${spring.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ws.security</groupId>
+			<artifactId>wss4j</artifactId>
+			<version>1.6.14</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+			<version>${spring.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>wsdl4j</groupId>
+			<artifactId>wsdl4j</artifactId>
+			<version>1.6.2</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- Necesario para wss4j2 utilizado por wss4j. el xmlsec qe carga spring 
+			ws security da error -->
+		<dependency>
+			<groupId>org.apache.santuario</groupId>
+			<artifactId>xmlsec</artifactId>
+			<version>2.1.4</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-nop Para quitar 
+			aviso al inicio -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-nop</artifactId>
+			<version>1.7.26</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.jasypt/jasypt-spring3 Neecesario 
+			para definir el localización del fichero de propiedades del cigrado de contraseñas -->
+		<dependency>
+			<groupId>org.jasypt</groupId>
+			<artifactId>jasypt-spring3</artifactId>
+			<version>1.9.3</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.ws</groupId>
+			<artifactId>spring-ws-core</artifactId>
+			<version>${spring.ws.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.ws</groupId>
+			<artifactId>spring-ws-security</artifactId>
+			<version>${spring.ws.version}</version>
+		</dependency>
+
+
+		<!-- <dependency> <groupId>org.bouncycastle</groupId> <artifactId>bcprov-jdk16</artifactId> 
+			<version>1.46</version> <type>jar</type> <scope>compile</scope> </dependency> -->
+		<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>1.63</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+
+	</dependencies>
+
+</project>

@@ -1,5 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>es.ine.sgtic</groupId>
@@ -29,7 +30,7 @@
 				<!-- Plugin para generar clases del cliente ws, a partir del wsdl -->
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jaxws-maven-plugin</artifactId>
-				<version>2.5</version>
+				<version>2.6</version>
 				<executions>
 					<execution>
 						<id>generate-wsclient</id>
@@ -40,16 +41,21 @@
 				</executions>
 				<configuration>
 					<target>2.1</target>
-				<!-- 	<wsdlUrls>-->
-				<!--	  <wsdlUrl>https://${servidor.ws}:${puerto.ws}/ServiciosWCF/OVCWcfConsulta/wsdl/OVCConsulta.wsdl</wsdlUrl> -->
-						<!-- <wsdlUrl>http://desa10.ine.es:8080/consultaMDG-ws/endpoints/ConsultaMDG.wsdl</wsdlUrl> -->
-						<!-- <wsdlUrl>http://localhost:8080/consultaMDG-ws/endpoints/ConsultaMDG.wsdl</wsdlUrl> -->
-				<!--	</wsdlUrls>-->
+					<!-- <wsdlUrls> -->
+					<!-- <wsdlUrl>https://${servidor.ws}:${puerto.ws}/ServiciosWCF/OVCWcfConsulta/wsdl/OVCConsulta.wsdl</wsdlUrl> -->
+					<!-- <wsdlUrl>http://desa10.ine.es:8080/consultaMDG-ws/endpoints/ConsultaMDG.wsdl</wsdlUrl> -->
+					<!-- <wsdlUrl>http://localhost:8080/consultaMDG-ws/endpoints/ConsultaMDG.wsdl</wsdlUrl> -->
+					<!-- </wsdlUrls> -->
+<!-- 					<wsdlUrls>
+					https://serwebi.sedecatastro.gob.es/ServiciosWCF/OVCWcfConsulta/wsdl/OVCConsulta.wsdl
+					</wsdlUrls> -->
+					<wsdlDirectory>${basedir}/src/main/resources/wsdl</wsdlDirectory>
 					<wsdlFiles>
-                   		 <wsdlFile>${basedir}/src/main/resources/wsdl/OVCConsulta.wsdl</wsdlFile>
-                	</wsdlFiles>
+						<wsdlFile>OVCConsulta.wsdl</wsdlFile>
+					</wsdlFiles>
 					<sourceDestDir>${basedir}/src/main/java</sourceDestDir>
 					<verbose>true</verbose>
+					<extension>true</extension>
 				</configuration>
 			</plugin>
 			<!-- <plugin> <groupId>org.jvnet.jax-ws-commons</groupId> <artifactId>jaxws-maven-plugin</artifactId> 
@@ -68,6 +74,7 @@
 					<!-- Para que por defeto se tilice java 8 -->
 					<source>1.8</source>
 					<target>1.8</target>
+				
 				</configuration>
 			</plugin>
 			<!-- copia dependencias a lib -->
@@ -128,8 +135,8 @@
 	<properties>
 
 
-		<spring.version>5.0.10.RELEASE</spring.version>
-		<spring.ws.version>3.0.7.RELEASE</spring.ws.version>
+		<spring.version>5.3.19</spring.version>
+		<spring.ws.version>3.1.3</spring.ws.version>
 		<log4j.version>1.2.17</log4j.version>
 		<context.path>consulta-catastro-ws-cliente</context.path>
 
@@ -151,7 +158,7 @@
 					<log4j.appender>CONSOLA,FICHERO</log4j.appender> -->
 				<log4j.nivel_traza.general>DEBUG</log4j.nivel_traza.general>
 				<log4j.nivel_traza.spring>DEBUG</log4j.nivel_traza.spring>
-				<log4j.nivel_traza.spring.ws.client>TRACE</log4j.nivel_traza.spring.ws.client>
+				<log4j.nivel_traza.spring.ws.client>DEBUG</log4j.nivel_traza.spring.ws.client>
 				<log4j.nivel_traza.hibernate>INFO</log4j.nivel_traza.hibernate>
 				<log4j.nivel_traza.faces>INFO</log4j.nivel_traza.faces>
 				<log4j.nivel_traza.apache_commons>ERROR</log4j.nivel_traza.apache_commons>
@@ -171,9 +178,9 @@
 				<!-- <log4j.path>/opt/consultaMDG/log</log4j.path> <log4j.nombre.fichero-web>consultaMDG-cliente.log</log4j.nombre.fichero-web> 
 					<log4j.MaxFileSize>59999KB</log4j.MaxFileSize> <log4j.MaxBackupIndex>9</log4j.MaxBackupIndex> 
 					<log4j.appender>CONSOLA,FICHERO</log4j.appender> -->
-				<log4j.nivel_traza.general>ERROR</log4j.nivel_traza.general>
-				<log4j.nivel_traza.spring>ERROR</log4j.nivel_traza.spring>
-				<log4j.nivel_traza.spring.ws.client>ERROR</log4j.nivel_traza.spring.ws.client>
+				<log4j.nivel_traza.general>DEBUG</log4j.nivel_traza.general>
+				<log4j.nivel_traza.spring>DEBUG</log4j.nivel_traza.spring>
+				<log4j.nivel_traza.spring.ws.client>DEBUG</log4j.nivel_traza.spring.ws.client>
 				<log4j.nivel_traza.hibernate>ERROR</log4j.nivel_traza.hibernate>
 				<log4j.nivel_traza.faces>ERROR</log4j.nivel_traza.faces>
 				<log4j.nivel_traza.apache_commons>ERROR</log4j.nivel_traza.apache_commons>
@@ -255,6 +262,13 @@
 			<artifactId>wss4j</artifactId>
 			<version>1.6.14</version>
 		</dependency>
+		      <dependency>
+         <groupId>com.sun.xml.ws</groupId>
+         <artifactId>jaxws-rt</artifactId>
+         <version>2.2.5</version>
+         <scope>compile</scope>
+      </dependency>
+		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-oxm</artifactId>
@@ -277,7 +291,19 @@
 			<artifactId>xmlsec</artifactId>
 			<version>2.1.4</version>
 		</dependency>
+    <!-- JAXB API -->
+    <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>2.3.1</version>
+    </dependency>
 
+    <!-- JAXB RI -->
+    <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-impl</artifactId>
+        <version>2.3.4</version>
+    </dependency>
 		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-nop Para quitar 
 			aviso al inicio -->
 		<dependency>
@@ -291,15 +317,13 @@
 		<dependency>
 			<groupId>org.jasypt</groupId>
 			<artifactId>jasypt-spring3</artifactId>
-			<version>1.9.3</version>
+			<version>1.9.2</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>org.springframework.ws</groupId>
 			<artifactId>spring-ws-core</artifactId>
 			<version>${spring.ws.version}</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>org.springframework.ws</groupId>
 			<artifactId>spring-ws-security</artifactId>
@@ -310,6 +334,7 @@
 		<!-- <dependency> <groupId>org.bouncycastle</groupId> <artifactId>bcprov-jdk16</artifactId> 
 			<version>1.46</version> <type>jar</type> <scope>compile</scope> </dependency> -->
 		<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
+		
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15on</artifactId>

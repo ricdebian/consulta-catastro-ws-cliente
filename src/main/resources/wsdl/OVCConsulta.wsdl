@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions name="OVCConsulta"
+	targetNamespace="http://www.catastro.meh.es/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+	xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex"
+	xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy"
+	xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract"
+	xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+	xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+	xmlns:tns="http://www.catastro.meh.es/"
+	xmlns:wsa10="http://www.w3.org/2005/08/addressing"
+	xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+	xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+	<wsp:Policy wsu:Id="BasicHttpBinding_IOVCConsulta_policy">
+		<wsp:ExactlyOne>
+			<wsp:All>
+				<sp:TransportBinding
+					xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+					<wsp:Policy>
+						<sp:TransportToken>
+							<wsp:Policy>
+								<sp:HttpsToken RequireClientCertificate="true" />
+							</wsp:Policy>
+						</sp:TransportToken>
+						<sp:AlgorithmSuite>
+							<wsp:Policy>
+								<sp:Basic256 />
+							</wsp:Policy>
+						</sp:AlgorithmSuite>
+						<sp:Layout>
+							<wsp:Policy>
+								<sp:Strict />
+							</wsp:Policy>
+						</sp:Layout>
+					</wsp:Policy>
+				</sp:TransportBinding>
+			</wsp:All>
+		</wsp:ExactlyOne>
+	</wsp:Policy>
+	<wsdl:types>
+		<xs:schema elementFormDefault="qualified"
+			targetNamespace="http://www.catastro.meh.es/"
+			xmlns:xs="http://www.w3.org/2001/XMLSchema">
+			<xs:element name="ConsultaBI_In">
+				<xs:complexType mixed="true">
+					<xs:sequence>
+						<xs:any />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Consulta_Out">
+				<xs:complexType mixed="true">
+					<xs:sequence>
+						<xs:any />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:complexType name="Atributos">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="IDPeticion"
+						nillable="true" type="xs:string">
+						<xs:annotation>
+							<xs:appinfo>
+								<DefaultValue EmitDefaultValue="false"
+									xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="TimeStamp"
+						nillable="true" type="xs:string" />
+					<xs:element minOccurs="0" name="Estado" nillable="true"
+						type="tns:Estado" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="Atributos" nillable="true"
+				type="tns:Atributos" />
+			<xs:complexType name="Estado">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="CodigoEstado"
+						nillable="true" type="xs:string" />
+					<xs:element minOccurs="0" name="LiteralError"
+						nillable="true" type="xs:string" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="Estado" nillable="true"
+				type="tns:Estado" />
+		</xs:schema>
+		<xs:schema attributeFormDefault="qualified"
+			elementFormDefault="qualified"
+			targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/"
+			xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/">
+			<xs:element name="anyType" nillable="true"
+				type="xs:anyType" />
+			<xs:element name="anyURI" nillable="true" type="xs:anyURI" />
+			<xs:element name="base64Binary" nillable="true"
+				type="xs:base64Binary" />
+			<xs:element name="boolean" nillable="true"
+				type="xs:boolean" />
+			<xs:element name="byte" nillable="true" type="xs:byte" />
+			<xs:element name="dateTime" nillable="true"
+				type="xs:dateTime" />
+			<xs:element name="decimal" nillable="true"
+				type="xs:decimal" />
+			<xs:element name="double" nillable="true" type="xs:double" />
+			<xs:element name="float" nillable="true" type="xs:float" />
+			<xs:element name="int" nillable="true" type="xs:int" />
+			<xs:element name="long" nillable="true" type="xs:long" />
+			<xs:element name="QName" nillable="true" type="xs:QName" />
+			<xs:element name="short" nillable="true" type="xs:short" />
+			<xs:element name="string" nillable="true" type="xs:string" />
+			<xs:element name="unsignedByte" nillable="true"
+				type="xs:unsignedByte" />
+			<xs:element name="unsignedInt" nillable="true"
+				type="xs:unsignedInt" />
+			<xs:element name="unsignedLong" nillable="true"
+				type="xs:unsignedLong" />
+			<xs:element name="unsignedShort" nillable="true"
+				type="xs:unsignedShort" />
+			<xs:element name="char" nillable="true" type="tns:char" />
+			<xs:simpleType name="char">
+				<xs:restriction base="xs:int" />
+			</xs:simpleType>
+			<xs:element name="duration" nillable="true"
+				type="tns:duration" />
+			<xs:simpleType name="duration">
+				<xs:restriction base="xs:duration">
+					<xs:pattern
+						value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?" />
+					<xs:minInclusive
+						value="-P10675199DT2H48M5.4775808S" />
+					<xs:maxInclusive value="P10675199DT2H48M5.4775807S" />
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:element name="guid" nillable="true" type="tns:guid" />
+			<xs:simpleType name="guid">
+				<xs:restriction base="xs:string">
+					<xs:pattern
+						value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}" />
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:attribute name="FactoryType" type="xs:QName" />
+			<xs:attribute name="Id" type="xs:ID" />
+			<xs:attribute name="Ref" type="xs:IDREF" />
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="ConsultaBI_In">
+		<wsdl:part name="ConsultaBI_In" element="tns:ConsultaBI_In" />
+	</wsdl:message>
+	<wsdl:message name="Consulta_Out">
+		<wsdl:part name="Consulta_Out" element="tns:Consulta_Out" />
+	</wsdl:message>
+	<wsdl:message
+		name="IOVCConsulta_ObtenerConsulta_ErrorFaultFault_FaultMessage">
+		<wsdl:part name="detail" element="tns:Atributos" />
+	</wsdl:message>
+	<wsdl:message
+		name="IOVCConsulta_ObtenerConsultaVdR_ErrorFaultFault_FaultMessage">
+		<wsdl:part name="detail" element="tns:Atributos" />
+	</wsdl:message>
+	<wsdl:portType name="IOVCConsulta">
+		<wsdl:operation name="ObtenerConsulta">
+			<wsdl:input
+				wsaw:Action="http://www.catastro.meh.es/IOVCConsulta/ObtenerConsulta"
+				name="ConsultaBI_In" message="tns:ConsultaBI_In" />
+			<wsdl:output
+				wsaw:Action="http://www.catastro.meh.es/IOVCConsulta/ObtenerConsultaResponse"
+				name="Consulta_Out" message="tns:Consulta_Out" />
+			<wsdl:fault
+				wsaw:Action="http://www.catastro.meh.es/IOVCConsulta/ObtenerConsultaErrorFaultFault"
+				name="ErrorFaultFault"
+				message="tns:IOVCConsulta_ObtenerConsulta_ErrorFaultFault_FaultMessage" />
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerConsultaVdR">
+			<wsdl:input
+				wsaw:Action="http://www.catastro.meh.es/IOVCConsulta/ObtenerConsultaVdR"
+				name="ConsultaBI_In" message="tns:ConsultaBI_In" />
+			<wsdl:output
+				wsaw:Action="http://www.catastro.meh.es/IOVCConsulta/ObtenerConsultaVdRResponse"
+				name="Consulta_Out" message="tns:Consulta_Out" />
+			<wsdl:fault
+				wsaw:Action="http://www.catastro.meh.es/IOVCConsulta/ObtenerConsultaVdRErrorFaultFault"
+				name="ErrorFaultFault"
+				message="tns:IOVCConsulta_ObtenerConsultaVdR_ErrorFaultFault_FaultMessage" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="BasicHttpBinding_IOVCConsulta"
+		type="tns:IOVCConsulta">
+		<wsp:PolicyReference
+			URI="#BasicHttpBinding_IOVCConsulta_policy" />
+		<soap:binding
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="ObtenerConsulta">
+			<soap:operation
+				soapAction="http://www.catastro.meh.es/IOVCConsulta/ObtenerConsulta"
+				style="document" />
+			<wsdl:input name="ConsultaBI_In">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="Consulta_Out">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="ErrorFaultFault">
+				<soap:fault name="ErrorFaultFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="ObtenerConsultaVdR">
+			<soap:operation
+				soapAction="http://www.catastro.meh.es/IOVCConsulta/ObtenerConsultaVdR"
+				style="document" />
+			<wsdl:input name="ConsultaBI_In">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="Consulta_Out">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="ErrorFaultFault">
+				<soap:fault name="ErrorFaultFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="OVCConsulta">
+		<wsdl:port name="BasicHttpBinding_IOVCConsulta"
+			binding="tns:BasicHttpBinding_IOVCConsulta">
+			<soap:address
+				location="https://serwebi.sedecatastro.gob.es/ServiciosWCF/OVCWcfConsulta/OVCConsulta.svc" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

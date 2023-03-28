@@ -225,11 +225,12 @@ public class ClienteMain {
 				// Parseamos la línea de peticion
 				try {
 					PeticCatastroVo petic = new PeticCatastroVo(lineaPetic);
+				
 					wss.setSecurementEncryptionParts(
 							"{Content}{http://es/meh/catastro}ConsultaBIIn");
 					final ConsultaBIIn pet = new ConsultaBIIn();
 				    
-					// System.out.println("Parámetro id: "+args[1]);
+				
 					pet.getContent().add(petic);
 					/*
 					 * * <control> <TimeStamp>24/04/2013 10:20:13</TimeStamp> </control>

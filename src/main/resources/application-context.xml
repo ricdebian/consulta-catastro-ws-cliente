@@ -8,47 +8,51 @@
 
 
 
-
-	<!-- -->
-	<!-- Configuration for encryptor, based on environment variables. -->
-	<!-- -->
-	<!-- In this example, the encryption password will be read from an -->
-	<!-- environment variable called "APP_ENCRYPTION_PASSWORD" which, once -->
-	<!-- the application has been started, could be safely unset. -->
-	<!-- -->
+<!-- 
+		
+	Configuration for encryptor, based on environment variables.
+	
+	In this example, the encryption password will be read from an
+	environment variable called "APP_ENCRYPTION_PASSWORD" which, once
+	the application has been started, could be safely unset.
+	
 	<bean id="environmentVariablesConfiguration"
 		class="org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig">
 		<property name="algorithm" value="PBEWithMD5AndDES" />
-  		<property name="passwordEnvName" value="APP_ENCRYPTION_PASSWORD" />  
+		<property name="passwordEnvName" value="APP_ENCRYPTION_PASSWORD" />
 	</bean>
 
 
-	<!-- 
+	
 	The will be the encryptor used for decrypting configuration values.
- -->	
+	
 	<bean id="configurationEncryptor" class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
 		<property name="config" ref="environmentVariablesConfiguration" />
 	</bean>
 
  
-	<!-- -->
-	<!-- The EncryptablePropertyPlaceholderConfigurer will read the -->
-	<!-- .properties files and make their values accessible as ${var}. -->
-	<!-- -->
-	<!-- Our "configurationEncryptor" bean (which implements -->
-	<!-- org.jasypt.encryption.StringEncryptor) is set as a constructor arg. -->
-	<!-- -->
+	
+	The EncryptablePropertyPlaceholderConfigurer will read the
+	.properties files and make their values accessible as ${var}.
+	
+	Our "configurationEncryptor" bean (which implements
+	org.jasypt.encryption.StringEncryptor) is set as a constructor arg.
+	
 	<bean id="propertyConfigurer"
-     class="org.jasypt.spring3.properties.EncryptablePropertyPlaceholderConfigurer"> 
+		class="org.jasypt.spring3.properties.EncryptablePropertyPlaceholderConfigurer">
 		<constructor-arg ref="configurationEncryptor" />
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
 		<property name="locations">
 			<list>
-				<value>classpath:cliente-ws.properties</value>
+				<value> classpath:cliente-ws.properties</value>
 			</list>
 		</property>
 
-	</bean>
+	</bean> -->
+<bean id="propertyConfigurer" 
+  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="location" value="classpath:cliente-ws.properties" />
+</bean> 
 
 	<bean name="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
 <!--     <property name="defaultUri"	value="https://${servidor.ws}:${puerto.ws}/IOVCConsulta/ObtenerConsulta" />	 -->	
@@ -73,14 +77,14 @@
 			<list>
 
 				<value>es.meh.catastro</value>
- 			    <value>es.meh.catastro.impl</value>
+ 			    <value>com.microsoft.schemas._2003._10.serialization</value>
 
 			</list>
 		</property>
 	</bean>
 
 	<bean id="servicio"
-		class="es.meh.catastro.impl.OVCConsultaImpl">
+		class="es.meh.catastro.imp.OVCConsultaImp">
 		<property name="webServiceTemplate" ref="webServiceTemplate" />
 	</bean>
 
@@ -95,7 +99,7 @@
 		<property name="validationCallbackHandler">
 			<bean
 				class="org.springframework.ws.soap.security.wss4j2.callback.KeyStoreCallbackHandler">
-				<property name="privateKeyPassword" value="${cliente.ws.passwdsecerta}" />
+				<property name="privateKeyPassword" value="${cliente.ws.passwdsecerta}" /> 
 			</bean>
 		</property>
 

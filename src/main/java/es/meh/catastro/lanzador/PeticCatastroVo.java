@@ -56,7 +56,7 @@ public class PeticCatastroVo {
 			
 			tamLinea = linea.replaceAll("\\s+$","").length(); 
 			if (tamLinea!=36 && tamLinea!=32){
-				throw new CatastroException("LÃ­nea '"+linea+"' de longitud inadeacuada");
+				throw new CatastroException("Línea '"+linea+"' de longitud inadeacuada");
 			}
 		}
 		

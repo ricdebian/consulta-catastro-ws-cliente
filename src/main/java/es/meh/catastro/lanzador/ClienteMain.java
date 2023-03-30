@@ -11,6 +11,7 @@ import java.io.OutputStreamWriter;
 //import java.io.PrintWriter;
 //import java.io.InputStream;
 //import java.util.Properties;
+import java.util.ArrayList;
 
 //import org.apache.log4j.chainsaw.Main;
 
@@ -204,12 +205,12 @@ public class ClienteMain {
 		ctx = new ClassPathXmlApplicationContext("application-context.xml");
 
 		IOVCConsulta client = (IOVCConsulta) ctx.getBean("servicio");
-
+		
 
 		Wss4jSecurityInterceptor wss = (Wss4jSecurityInterceptor) ctx.getBean("wsSecurityInterceptorRespuesta");
 		// Asignamos los ficheros de trabajo
 
-		// int lineaTratada = 1;
+		int lineaTratada = 1;
 		try {
 			// Iniciamos la lectura del fichero recibido por parÃ¡metro
 			final File f = new File(fich_peticiones);
@@ -218,19 +219,19 @@ public class ClienteMain {
 			String lineaPetic = bfr.readLine();
 
 		//	ConsultaBIIn cbi = new ConsultaBIIn();// petición request
+			wss.setSecurementEncryptionParts(
+					"{Content}{http://es/meh/catastro}ConsultaBIIn");
+			final ConsultaBIIn pet = new ConsultaBIIn();
+			
 			ConsultaOut cout = new ConsultaOut();// Respuesta response
 			// ArrayList<ConsultaOut> cout = new ArrayList<ConsultaOut>();
 			while (lineaPetic != null) {
 
 				// Parseamos la línea de peticion
 				try {
-					PeticCatastroVo petic = new PeticCatastroVo(lineaPetic);
+					PeticCatastroVo petic = new  PeticCatastroVo(lineaPetic);
 				
-					wss.setSecurementEncryptionParts(
-							"{Content}{http://es/meh/catastro}ConsultaBIIn");
-					final ConsultaBIIn pet = new ConsultaBIIn();
-				    
-				
+	
 					pet.getContent().add(petic);
 					/*
 					 * * <control> <TimeStamp>24/04/2013 10:20:13</TimeStamp> </control>
@@ -244,14 +245,14 @@ public class ClienteMain {
 
 					cout = client.obtenerConsulta(pet);
 
-					System.out.println(cout.getContent().toString());
+					
 
-				} catch (CatastroException e) {
+				} catch (IOVCConsultaObtenerConsultaErrorFaultFaultFaultMessage e) {
 					addLineaFichError(lineaPetic.substring(0, 10), e.getMessage());
 				} finally {
 					// Cargamos la siguiente lÃ­nea
 					lineaPetic = bfr.readLine();
-					/// lineaTratada++;
+				    lineaTratada++;
 				}
 			}
 			fr.close();
@@ -259,8 +260,15 @@ public class ClienteMain {
 
 		} catch (FileNotFoundException e) {
 
-			System.out.println("Error al abrir el fichero");
+			//Volcamos el error al fichero RESP_ERROR
+			final String msgErr = String.format("Fichero [%s]. Error por fichero no encontrado.", fich_peticiones, e.getMessage());
+			logger.error(msgErr, e);
 
+		}catch (IOException e) {
+
+			//Volcamos el error al fichero RESP_ERROR
+			final String msgErr = String.format("Fichero [%s]. Error procesando fichero.", fich_peticiones, e.getMessage());
+			logger.error(msgErr, e);
 		}
 
 	}
@@ -287,9 +295,9 @@ public class ClienteMain {
 			osw.close();
 
 		} catch (Exception e) {
-			// logger.error(String.format("Error añadiendo línea [%s] en fichero [%s]",
-			// linea, fich_error));
-			System.out.printf("Error añadiendo línea [%s] en fichero [%s]", linea, fich_error);
+			 logger.error(String.format("Error añadiendo línea [%s] en fichero [%s]",
+			 linea, fich_error));
+			//System.out.printf("Error añadiendo línea [%s] en fichero [%s]", linea, fich_error);
 		}
 	}
 
